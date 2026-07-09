@@ -2,18 +2,18 @@
 
 ## 1. 物理背景与单位制
 
-为研究水星绕太阳的轨道运动，我们采用二维平面下的牛顿引力定律。在自然单位制中，长度以 $R_0 = 10^{10} \, \text{m}$ 为单位，时间以 $T_0 = 1$ 地球日为单位。代码中设置 $R_0 = 1$、$T_0 = 1$，所有物理量均为无量纲数值。
+为研究水星绕太阳的轨道运动，我们采用二维平面下的牛顿引力定律。在自然单位制中，长度以 $R_0 = 10^{10}  \text{m}$ 为单位，时间以 $T_0 = 1$ 地球日为单位。代码中设置 $R_0 = 1$、 $T_0 = 1$ ，所有物理量均为无量纲数值。
 
 太阳的史瓦西半径定义为
 
 $$
-r_s = \frac{2 G_N M_{\rm sun}}{c^2} = 2.95 \times 10^{-7} \, R_0
+r_s = \frac{2 G_N M_{\rm sun}}{c^2} = 2.95 \times 10^{-7}  R_0
 $$
 
 由此可将牛顿引力加速度改写为
 
 $$
-\ddot{\vec{r}} = -\frac{c^2 r_s}{2} \, \frac{1}{r^2} \, \frac{\vec{r}}{r}
+\ddot{\vec{r}} = -\frac{c^2 r_s}{2}  \frac{1}{r^2}  \frac{\vec{r}}{r}
 $$
 
 即
@@ -22,10 +22,10 @@ $$
 \ddot{\vec{r}} = - \frac{c^2 r_s}{2} \frac{\vec{r}}{r^3}
 $$
 
-实际计算中，常数 $\frac{c^2 r_s}{T_0^2} = 0.99 \, R_0^3 / T_0^2$，因此加速度分量可写为
+实际计算中，常数 $\frac{c^2 r_s}{T_0^2} = 0.99  R_0^3 / T_0^2$，因此加速度分量可写为
 
 $$
-a_x = -0.99 \, \frac{x}{r^3}, \qquad a_y = -0.99 \, \frac{y}{r^3}
+a_x = -0.99  \frac{x}{r^3}, \qquad a_y = -0.99  \frac{y}{r^3}
 $$
 
 其中 $r = \sqrt{x^2 + y^2}$。
@@ -33,7 +33,7 @@ $$
 初始条件（对应水星近日点附近）为
 
 $$
-x(0) = 0, \quad y(0) = 5.5 \, R_0, \quad v_x(0) = 0.53 \, \frac{R_0}{T_0}, \quad v_y(0) = 0
+x(0) = 0, \quad y(0) = 5.5  R_0, \quad v_x(0) = 0.53  \frac{R_0}{T_0}, \quad v_y(0) = 0
 $$
 
 模拟总时长设为 5 个水星年，即 $5 \times 88.0 = 440$ 地球日。
@@ -49,11 +49,11 @@ $$
 位置与速度同时向前推进，但速度更新采用当前时刻的加速度：
 
 $$
-\vec{v}_{n+1} = \vec{v}_n + \vec{a}(\vec{r}_n) \, \Delta t
+\vec{v}_{n+1} = \vec{v}_n + \vec{a}(\vec{r}_n)  \Delta t
 $$
 
 $$
-\vec{r}_{n+1} = \vec{r}_n + \vec{v}_n \, \Delta t
+\vec{r}_{n+1} = \vec{r}_n + \vec{v}_n  \Delta t
 $$
 
 该方法为一阶精度，能量漂移严重，仅用于对照。
@@ -84,7 +84,7 @@ $$
 \vec{k}_1 &= \vec{v}_n, & \vec{l}_1 &= \vec{a}(\vec{r}_n) \\
 \vec{k}_2 &= \vec{v}_n + \frac{\Delta t}{2} \vec{l}_1, & \vec{l}_2 &= \vec{a}(\vec{r}_n + \frac{\Delta t}{2} \vec{k}_1) \\
 \vec{k}_3 &= \vec{v}_n + \frac{\Delta t}{2} \vec{l}_2, & \vec{l}_3 &= \vec{a}(\vec{r}_n + \frac{\Delta t}{2} \vec{k}_2) \\
-\vec{k}_4 &= \vec{v}_n + \Delta t \, \vec{l}_3, & \vec{l}_4 &= \vec{a}(\vec{r}_n + \Delta t \, \vec{k}_3)
+\vec{k}_4 &= \vec{v}_n + \Delta t  \vec{l}_3, & \vec{l}_4 &= \vec{a}(\vec{r}_n + \Delta t  \vec{k}_3)
 \end{aligned}
 $$
 
