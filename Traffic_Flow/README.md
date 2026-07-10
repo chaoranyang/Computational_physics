@@ -2,9 +2,6 @@
 
 https://github.com/user-attachments/assets/ab7811a5-c291-4dea-8ca2-ba381e148c56
 
-<video autoplay loop muted playsinline style="max-width: 100%; height: auto;">
-  <source src="https://github.com/user-attachments/assets/ab7811a5-c291-4dea-8ca2-ba381e148c56" type="video/mp4">
-</video>
 ---
 
 ## 1. 物理背景与模型方程
