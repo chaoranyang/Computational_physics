@@ -1,8 +1,12 @@
 # 交通流方程与von Neumann 稳定性分析
 
+https://github.com/user-attachments/assets/ab7811a5-c291-4dea-8ca2-ba381e148c56
+
+---
+
 ## 1. 物理背景与模型方程
 
-交通流问题中，车辆密度 $\rho(x,t)$ 满足连续性方程。若将流量简化为 $F = C \rho$（$C$ 为常数波速），则得到线性平流方程
+交通流问题中，车辆密度 $\rho(x,t)$ 满足连续性方程。若将流量简化为 $F = C \rho$（ $C$ 为常数波速），则得到线性平流方程
 
 $$
 \frac{\partial \rho}{\partial t} = -C \frac{\partial \rho}{\partial x}
@@ -22,7 +26,7 @@ $$
 \rho(x, t+\Delta t) = \rho(x,t) + \Delta t   \rho_t + \frac{\Delta t^2}{2} \rho_{tt} + \mathcal{O}(\Delta t^3)
 $$
 
-利用原方程，$\rho_t = -C \rho_x$，$\rho_{tt} = C^2 \rho_{xx}$，因此
+利用原方程， $\rho_t = -C \rho_x$ ， $\rho_{tt} = C^2 \rho_{xx}$ ，因此
 
 $$
 \rho(x, t+\Delta t) = \rho - C \Delta t   \rho_x + \frac{C^2 \Delta t^2}{2} \rho_{xx} + \mathcal{O}(\Delta t^3)
@@ -44,7 +48,7 @@ $$
 
 ### 2.2 代码实现
 
-函数 `lax_wendroff(rho, C, dt, dx)` 实现单步更新。边界处采用零梯度条件（外推），即 $\rho_0 = \rho_1$，$\rho_{N-1} = \rho_{N-2}$。
+函数 `lax_wendroff(rho, C, dt, dx)` 实现单步更新。边界处采用零梯度条件（外推），即 $\rho_0 = \rho_1$ ， $\rho_{N-1} = \rho_{N-2}$。
 
 ---
 
@@ -52,15 +56,17 @@ $$
 
 定义三种初始密度分布：
 
-- **情况 (a)**：仅在区间 $(L/4, L/2)$ 内有抛物线形分布  
-  $$
-  \rho_0(x) = \frac{4}{L^2} (x - L/4)^2, \quad x \in (L/4, L/2)
-  $$
+- **情况 (a)**：仅在区间 $(L/4, L/2)$ 内有抛物线形分布
 
-- **情况 (b)**：在 $(L/4, 3L/4)$ 内有三角形分布  
-  $$
-  \rho_0(x) = \frac{4}{L} \left( \frac{L}{4} - \left| x - \frac{L}{2} \right| \right), \quad x \in (L/4, 3L/4)
-  $$
+$$
+\rho_0(x) = \frac{4}{L^2} (x - L/4)^2, \quad x \in (L/4, L/2)
+$$
+
+- **情况 (b)**：在 $(L/4, 3L/4)$ 内有三角形分布
+
+$$
+\rho_0(x) = \frac{4}{L} \left( \frac{L}{4} - \left| x - \frac{L}{2} \right| \right), \quad x \in (L/4, 3L/4)
+$$
 
 - **情况 (c)**：同 (b)，但波速取 $C = -1$，即波向左传播。
 
@@ -77,78 +83,90 @@ $$
 ### 4.1 FTCS (Forward Time Centered Space)
 
 格式：
+
 $$
 u_j^{n+1} = u_j^n - \frac{c \Delta t}{2 \Delta x} (u_{j+1}^n - u_{j-1}^n)
 $$
 
 代入模态：
+
 $$
 \xi = 1 - i \alpha \sin \theta, \quad \alpha = \frac{c \Delta t}{\Delta x}, \quad \theta = k \Delta x
 $$
 
 模方：
+
 $$
 |\xi|^2 = 1 + \alpha^2 \sin^2 \theta \ge 1
 $$
 
-故 $|\xi| > 1$（除非 $\alpha=0$），**无条件不稳定**。
+故 $|\xi| > 1$（除非 $\alpha=0$） ，**无条件不稳定**。
 
 ### 4.2 FTFS (Forward Time Forward Space)
 
 格式：
+
 $$
 u_j^{n+1} = u_j^n - \alpha (u_j^n - u_{j-1}^n)
 $$
 
 代入模态：
+
 $$
 \xi = 1 - \alpha (1 - e^{-i\theta}) = 1 - \alpha + \alpha e^{-i\theta}
 $$
 
-稳定性条件为 $0 \le \alpha \le 1$ 且要求 $|\xi| \le 1$，即 $0 \le \alpha \le 1$ 时稳定（但实际为条件稳定，且仅对右行波）。
+稳定性条件为 $0 \le \alpha \le 1$ 且要求 $|\xi| \le 1$ ，即 $0 \le \alpha \le 1$ 时稳定（但实际为条件稳定，且仅对右行波）。
 
 ### 4.3 CTCS (Centered Time Centered Space，即 Leap‑Frog)
 
 格式：
+
 $$
 u_j^{n+1} = u_j^{n-1} - \alpha (u_{j+1}^n - u_{j-1}^n)
 $$
 
 代入模态，得 $\xi$ 满足：
+
 $$
 \xi^2 - 1 = -2 i \alpha \sin \theta   \xi
 $$
 
 解得：
+
 $$
 \xi = -i \alpha \sin \theta \pm \sqrt{1 - \alpha^2 \sin^2 \theta}
 $$
 
-当 $|\alpha \sin \theta| \le 1$ 时，$|\xi| = 1$（中性稳定）；否则有一个根模大于 1。因此条件稳定：$|\alpha| \le 1$。
+当 $|\alpha \sin \theta| \le 1$ 时， $|\xi| = 1$ （中性稳定）；否则有一个根模大于 1。因此条件稳定： $|\alpha| \le 1$ 。
 
 ### 4.4 Lax‑Wendroff
 
 格式（如前所述）：
+
 $$
 u_j^{n+1} = u_j^n - \frac{\alpha}{2} (u_{j+1}^n - u_{j-1}^n) + \frac{\alpha^2}{2} (u_{j+1}^n - 2u_j^n + u_{j-1}^n)
 $$
 
 代入模态，得：
+
 $$
 \xi = 1 - i \alpha \sin \theta - \alpha^2 (1 - \cos \theta)
 $$
 
 利用 $1 - \cos \theta = 2 \sin^2(\theta/2)$，可写为：
+
 $$
 \xi = 1 - 2\alpha^2 \sin^2(\theta/2) - i \alpha \sin \theta
 $$
 
 模方：
+
 $$
 |\xi|^2 = 1 - 4 \alpha^2 (1 - \alpha^2) \sin^4(\theta/2)
 $$
 
-当 $|\alpha| \le 1$ 时，$|\xi|^2 \le 1$，**稳定**（且为二阶精度）。当 $|\alpha| > 1$ 时不稳。
+当 $|\alpha| \le 1$ 时， $|\xi|^2 \le 1$ ，**稳定**（且为二阶精度）。当 $|\alpha| > 1$ 时不稳。
 
 ---
 
@@ -164,7 +182,7 @@ $$
 
 代码包含以下主要部分：
 
-- 参数设置：$L$、$C$、$\Delta x$、$\Delta t$、总步数等。
+- 参数设置： $L$ 、 $C$ 、 $\Delta x$ 、 $\Delta t$ 、总步数等。
 - `lax_wendroff` 函数：执行单步 Lax‑Wendroff 更新。
 - `rho0_a`、`rho0_b`：定义初始条件。
 - `simulate`：循环迭代，存储历史密度。
